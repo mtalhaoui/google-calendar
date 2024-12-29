@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 const CalendarHeader = () => {
     const { monthIndex, setMonthIndex } = useContext(GlobalContext);
 
-    const handleReset = () => setMonthIndex(dayjs().month())
+    const handleReset = () => setMonthIndex(monthIndex === dayjs().month() ? monthIndex + Math.random() : dayjs().month())
     const handlePrevMonth = () => setMonthIndex(monthIndex - 1)
     const handleNextMonth = () => setMonthIndex(monthIndex + 1)
 
