@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 
 import GlobalContext from "../context/GlobalContext";
 import { Dayjs } from "dayjs";
+import SavedEventsAction from "../types/SavedEventsAction";
 
 const labelClasses = [
   "indigo",
@@ -16,7 +17,20 @@ const EventModal = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedLabel, setSelectedLabel] = useState(labelClasses[0]);
-  const { setShowEventModal, selectedDay } = useContext(GlobalContext);
+  const { setShowEventModal, selectedDay, dispatchCallEvent } = useContext(GlobalContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const calendarEvent = {
+      id: Date.now(),
+      title,
+      description,
+      label: selectedLabel,
+      day: selectedDay.valueOf()
+    };
+    dispatchCallEvent({ type: 'push', payload: calendarEvent } as SavedEventsAction);
+    setShowEventModal(false);
+  };
 
   return (
     <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center">
@@ -67,7 +81,10 @@ const EventModal = () => {
           </div>
         </div>
         <footer className="flex justify-end border-t p-3 mt-5">
-          <button type="submit" className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white">
             Save
           </button>
         </footer>
