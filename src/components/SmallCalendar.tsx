@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react'
-import dayjs, { Dayjs } from 'dayjs'
+import { useContext, useEffect, useState } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { getMonth } from '../util';
 import GlobalContext from '../context/GlobalContext';
@@ -9,22 +9,30 @@ const SmallCalendar = () => {
   const [currentMonthIndex, setCurrentMonthIndex] = useState(dayjs().month());
   const [currentMonth, setCurrentMonth] = useState(getMonth());
   useEffect(() => {
-    setCurrentMonth(getMonth(currentMonthIndex))
-  }, [currentMonthIndex])
-  const { monthIndex } = useContext(GlobalContext);
+    setCurrentMonth(getMonth(currentMonthIndex));
+  }, [currentMonthIndex]);
+  const { monthIndex, setSmallCalendarMonth, selectedDay, setSelectedDay } = useContext(GlobalContext);
 
   useEffect(() => {
-    setCurrentMonthIndex(monthIndex)
-  }, [monthIndex])
+    setCurrentMonthIndex(monthIndex);
+  }, [monthIndex]);
 
-  const handlePrevMonth = () => setCurrentMonthIndex(currentMonthIndex - 1)
-  const handleNextMonth = () => setCurrentMonthIndex(currentMonthIndex + 1)
+  const handlePrevMonth = () => setCurrentMonthIndex(currentMonthIndex - 1);
+  const handleNextMonth = () => setCurrentMonthIndex(currentMonthIndex + 1);
   const getDayClass = (day: Dayjs) => {
     const format = "DD-MM-YY";
     const nowDay = dayjs().format(format);
     const currentDate = day.format(format);
-    return nowDay === currentDate ? 'bg-blue-500 rounded-full text-white' : '';
-  }
+    const daySelected = selectedDay && (selectedDay as Dayjs).format(format);
+
+    if (nowDay === currentDate) {
+      return 'bg-blue-500 rounded-full text-white';
+    } else if (daySelected === currentDate) {
+      return 'bg-blue-100 rounded-full text-blue-600 font-bold';
+    } else {
+      return '';
+    }
+  };
 
   return (
     <div className='mt-9'>
@@ -46,13 +54,19 @@ const SmallCalendar = () => {
         {currentMonth.map((week, weekIndex) => (
           <React.Fragment key={weekIndex}>
             {week.map((day, dayIndex) => (
-              <button key={dayIndex} className={`py-1 w-full ${getDayClass(day)}`}><span className='text-sm'>{day.format('D')}</span></button>
+              <button
+                key={dayIndex}
+                onClick={() => {
+                  setSmallCalendarMonth(currentMonthIndex);
+                  setSelectedDay(day);
+                }}
+                className={`py-1 w-full ${getDayClass(day)}`}><span className='text-sm'>{day.format('D')}</span></button>
             ))}
           </React.Fragment>
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SmallCalendar
+export default SmallCalendar;
