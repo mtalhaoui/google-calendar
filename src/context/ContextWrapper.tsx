@@ -10,7 +10,8 @@ interface ContextWrapperProps {
 const ContextWrapper = ({ children }: ContextWrapperProps) => {
   const [monthIndex, setMonthIndex] = useState(dayjs().month());
   const [smallCalendarMonth, setSmallCalendarMonth] = useState(null);
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(dayjs());
+  const [showEventModal, setShowEventModal] = useState(false);
 
   useEffect(() => {
     if (smallCalendarMonth !== null) {
@@ -19,7 +20,16 @@ const ContextWrapper = ({ children }: ContextWrapperProps) => {
   }, [smallCalendarMonth]);
 
   return (
-    <GlobalContext.Provider value={{ monthIndex, setMonthIndex, smallCalendarMonth, setSmallCalendarMonth, selectedDay, setSelectedDay }}>
+    <GlobalContext.Provider value={{
+      monthIndex,
+      setMonthIndex,
+      smallCalendarMonth,
+      setSmallCalendarMonth,
+      selectedDay,
+      setSelectedDay,
+      showEventModal,
+      setShowEventModal
+    }}>
       {children}
     </GlobalContext.Provider>
   );
