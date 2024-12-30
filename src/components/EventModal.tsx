@@ -23,7 +23,7 @@ const EventModal = () => {
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     const calendarEvent = {
-      id: Date.now(),
+      id: selectedEvent ? selectedEvent.id : Date.now(),
       title,
       description,
       label: selectedLabel,
@@ -44,9 +44,20 @@ const EventModal = () => {
       <form className="bg-white rounded-lg shadow-2xl w-1/4">
         <header className="bg-gray-100 px-4 py-2 flex justify-between items-center">
           <span className="material-icons-outlined text-gray-400">drag_handle</span>
-          <button onClick={() => setShowEventModal(false)}>
-            <span className="material-icons-outlined text-gray-400">close</span>
-          </button>
+          <div>
+            {selectedEvent && (
+              <span
+                onClick={() => {
+                  dispatchCallEvent({ type: 'delete', payload: selectedEvent });
+                  setShowEventModal(false);
+                }}
+                className="material-icons-outlined text-gray-400 cursor-pointer"
+              >delete</span>
+            )}
+            <button onClick={() => setShowEventModal(false)}>
+              <span className="material-icons-outlined text-gray-400">close</span>
+            </button>
+          </div>
         </header>
         <div className="p-3">
           <div className="grid grid-cols-1/5 items-end gap-y-7">
