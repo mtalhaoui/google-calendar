@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import GlobalContext from '../context/GlobalContext';
+import Event from '../types/Event';
 
 interface DayProps {
   day: dayjs.Dayjs;
@@ -8,11 +9,17 @@ interface DayProps {
 }
 
 const Day = ({ day, weekIdx }: DayProps) => {
+  const [dayEvents, setDayEvents] = useState<Event[]>([]);
+  const { setSelectedDay, setShowEventModal, savedEvents, setSelectedEvent } = useContext(GlobalContext);
+
+  useEffect(() => {
+    const events = savedEvents.filter(evt => dayjs(evt.day).format("DD-MM-YY") === day.format("DD-MM-YY"));
+    setDayEvents(events);
+  }, [savedEvents, day]);
+
   const getCurrentDayClass = () => {
     return day.format('DD-MM-YY') === dayjs().format('DD-MM-YY') ? 'bg-blue-600 text-white rounded-full w-7' : '';
   };
-
-  const { setSelectedDay, setShowEventModal } = useContext(GlobalContext);
 
   return (
     <div className='border border-gray-200 flex flex-col'>
@@ -26,7 +33,14 @@ const Day = ({ day, weekIdx }: DayProps) => {
         setSelectedDay(day);
         setShowEventModal(true);
       }}>
-
+        {dayEvents.map((evt, evtIdx) => (
+          <div
+            key={evtIdx}
+            onClick={() => setSelectedEvent(evt)}
+            className={`bg-${evt.label}-200 p-1 mr-3 text-gray-600 text-sm rounded mb-1 truncate`}>
+            {evt.title}
+          </div>
+        ))}
       </div>
     </div>
   );

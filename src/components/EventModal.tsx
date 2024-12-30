@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 
 import GlobalContext from "../context/GlobalContext";
 import { Dayjs } from "dayjs";
@@ -14,12 +14,13 @@ const labelClasses = [
 ];
 
 const EventModal = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedLabel, setSelectedLabel] = useState(labelClasses[0]);
-  const { setShowEventModal, selectedDay, dispatchCallEvent } = useContext(GlobalContext);
+  const { setShowEventModal, selectedDay, dispatchCallEvent, selectedEvent } = useContext(GlobalContext);
 
-  const handleSubmit = (e) => {
+  const [title, setTitle] = useState(selectedEvent ? selectedEvent.title : '');
+  const [description, setDescription] = useState(selectedEvent ? selectedEvent.description : '');
+  const [selectedLabel, setSelectedLabel] = useState(selectedEvent ? labelClasses.find((lbl) => lbl === selectedEvent.label) : labelClasses[0]);
+
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     const calendarEvent = {
       id: Date.now(),
@@ -28,7 +29,13 @@ const EventModal = () => {
       label: selectedLabel,
       day: selectedDay.valueOf()
     };
-    dispatchCallEvent({ type: 'push', payload: calendarEvent } as SavedEventsAction);
+
+    if (selectedEvent) {
+      dispatchCallEvent({ type: 'update', payload: calendarEvent } as SavedEventsAction);
+    } else {
+      dispatchCallEvent({ type: 'push', payload: calendarEvent } as SavedEventsAction);
+    }
+
     setShowEventModal(false);
   };
 
