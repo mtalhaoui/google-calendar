@@ -10,12 +10,12 @@ interface DayProps {
 
 const Day = ({ day, weekIdx }: DayProps) => {
   const [dayEvents, setDayEvents] = useState<Event[]>([]);
-  const { setSelectedDay, setShowEventModal, savedEvents, setSelectedEvent } = useContext(GlobalContext);
+  const { setSelectedDay, setShowEventModal, filteredEvents, setSelectedEvent } = useContext(GlobalContext);
 
   useEffect(() => {
-    const events = savedEvents.filter(evt => dayjs(evt.day).format("DD-MM-YY") === day.format("DD-MM-YY"));
+    const events = filteredEvents.filter(evt => dayjs(evt.day).format("DD-MM-YY") === day.format("DD-MM-YY"));
     setDayEvents(events);
-  }, [savedEvents, day]);
+  }, [filteredEvents, day]);
 
   const getCurrentDayClass = () => {
     return day.format('DD-MM-YY') === dayjs().format('DD-MM-YY') ? 'bg-blue-600 text-white rounded-full w-7' : '';

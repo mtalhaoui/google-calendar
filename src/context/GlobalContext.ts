@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 
 import SavedEventsAction from "../types/SavedEventsAction";
 import Event from "../types/Event";
+import SidebarLabel from "../types/SidebarLabel";
 
 const GlobalContext = React.createContext({
   monthIndex: 0,
@@ -17,6 +18,10 @@ const GlobalContext = React.createContext({
   selectedEvent: null as Event | null,
   setSelectedEvent: (() => {}) as Dispatch<Event | null>,
   savedEvents: [] as Event[],
+  labels: [] as SidebarLabel[],
+  setLabels: (() => {}) as Dispatch<SidebarLabel[]>,
+  updateLabel: (_label: SidebarLabel) => {},
+  filteredEvents: [] as Event[],
 });
 
 export default GlobalContext;
